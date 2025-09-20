@@ -2,7 +2,8 @@ name: LaTex to PDF
 on:
   push:
     paths:
-      - "./report/**"
+      - "/report/**"
+  workflow_dispatch:
 jobs:
   build_latex:
     runs-on: ubuntu-latest
