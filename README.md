@@ -6,14 +6,14 @@ The **goal** of the project is to develop an AI model for recognition of facial 
 
 The project will be divided into 6 stages, and we will try to follow Agile methodology throughout the implementation. Each team member will have a personal role and set of responsibilities, considering their personal skillset, to achieve maximum group efficiency.
 
-|  Phase  |                          Description                         |        Timing       |
-| :-----: | :----------------------------------------------------------: | :-----------------: |
-| Stage 1 | Familiarization with toolset, dataset, and literature review | 22.09. - 28.09.2025 |
-| Stage 2 |                      Data preprocessing                      |  29.09. - 5.10.2025 |
-| Stage 3 |                 Model training and evaluation                |  6.10. - 12.10.2025 |
-| Stage 4 |                     Demo app development                     | 13.10. - 19.10.2025 |
-| Stage 5 |                   Presentation, short week                   | 20.10. - 24.10.2025 |
-| Stage 6 |                            Report                            | 25.10. - 31.10.2025 |
+|  Phase  |                          Description                         |Week |        Timing       |
+| :-----: | :----------------------------------------------------------: |:---:| :-----------------: |
+| Stage 1 | Familiarization with toolset, dataset, and literature review |  1  | 22.09. - 28.09.2025 |
+| Stage 2 |                      Data preprocessing                      |  2  |  29.09. - 5.10.2025 |
+| Stage 3 |                 Model training and evaluation                |  3  |  6.10. - 12.10.2025 |
+| Stage 4 |                       Simple demo app                        |  4  | 13.10. - 19.10.2025 |
+| Stage 5 |                   Presentation, short week                   |  5  | 20.10. - 24.10.2025 |
+| Stage 6 |                            Report                            |  6  | 25.10. - 31.10.2025 |
 
 ## Project Stages
 
@@ -114,7 +114,7 @@ Everything else in the plan remains intact.
 | Stage 1 | Familiarization with toolset, dataset, and literature review |  |
 | Stage 2 |                      Data preprocessing                      |  |
 | Stage 3 |                 Model training and evaluation                |  |
-| Stage 4 |                     Demo app development                     |  |
+| Stage 4 |                        Simple demo app                       |  |
 | Stage 5 |                         Presentation                         |  |
 | Stage 6 |                            Report                            |  |
 
