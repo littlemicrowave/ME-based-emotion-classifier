@@ -27,6 +27,8 @@ This stage should focus on familiarization with available tools and filling theo
 * Ready team members
 * Start of preprocessing
 
+---
+
 ### Stage 2. Preprocessing
 
 At this stage we should be familiar with the dataset and its contents. Most focus should be put on building a robust video preprocessing pipeline, whose outputs will be used for model training as well as in the demo app development stage.
@@ -47,6 +49,8 @@ At this stage we should be familiar with the dataset and its contents. Most focu
 
 * Preprocessed dataset (magnified frames, optical flow matrices)
 * Jupyter notebook with explanations of methods and processing steps
+
+---
 
 ### Stage 3. Modeling
 
@@ -70,6 +74,8 @@ Evaluation will be done according to F1 score, Precision, Recall, Accuracy, Conf
 * Trained model
 * Jupyter notebook with explanations, evaluation results, and visualizations
 
+---
+
 ### Stage 4. Demo app
 
 At this stage we take the winner architecture model and build an app which uses the preprocessing pipeline from [Stage 2](#stage-2-preprocessing). The app should get the input video stream (for instance webcam), preprocess input frames, feed them into the model, and render the AU predictions in real-time. This stage especially utilizes achievements of previous stages.
@@ -79,6 +85,8 @@ At this stage we take the winner architecture model and build an app which uses 
 1. Interactive demo video showing ME recognition in real-time
 2. App script
 
+---
+
 ### Stage 5. Presentation
 
 Preparation of presentation materials and a video of the demo app, and other potential tasks.
@@ -86,6 +94,8 @@ Preparation of presentation materials and a video of the demo app, and other pot
 **Stage output**
 
 * Presentation
+
+---
 
 ### Stage 6. Report
 
