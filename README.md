@@ -59,7 +59,7 @@ At this stage we should come up with a model architecture; potentially we should
 3. 3D CNN
 4. 2D CNN + (Bi)LSTM/GRU
 5. We might also try Attention instead of LSTM/GRU
-6. Since it is a classification task → loss is binary cross-entropy or categorical cross-entropy, last layer is softmax/sigmoid
+6. Since it is a classification task, loss is binary cross-entropy or categorical cross-entropy, last layer is softmax/sigmoid
 
 **Frameworks:** TensorFlow/PyTorch, scikit-learn, Matplotlib, NumPy, Pandas, MEB, and other tools
 
