@@ -1,4 +1,4 @@
-name: LaTex to PDF
+name: LaTeX to PDF
 on:
   push:
     paths:
