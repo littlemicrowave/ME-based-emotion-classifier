@@ -93,13 +93,23 @@ Preparation of presentation materials and a video of the demo app, and other pot
 
 **Stage output**
 
-* Presentation
+* Power Point Presentation
 
 ---
 
 ### Stage 6. Report
 
 Preparation of report in LaTeX format. GitHub CI pipeline for building the PDF document is ready at the moment of writing this project plan. The report should be based on the Jupyter notebooks from stages [Stage 2](#stage-2-preprocessing), and [Stage 3](#stage-3-modeling).
+
+The report needs to contain these mandatory parts:
+ 1. Abstract
+ 2. Introduction/Motivation
+ 3. Related work 
+ 4. Method/Implementation details
+ 5. Experiments/Evaluation of the method
+ 6. Discussion 
+ 7. Conclusion 
+ 8. Contribution distribution (how each team member contributed to the project)
 
 **Stage output**
 
