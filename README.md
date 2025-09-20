@@ -72,7 +72,7 @@ Evaluation will be done according to F1 score, Precision, Recall, Accuracy, Conf
 
 ### Stage 4. Demo app
 
-At this stage we take the winner architecture model and build an app which uses the preprocessing pipeline from **Stage 2**. The app should get the input video stream (for instance webcam), preprocess input frames, feed them into the model, and render the AU predictions in real-time. This stage especially utilizes achievements of previous stages.
+At this stage we take the winner architecture model and build an app which uses the preprocessing pipeline from [Stage 2](#stage-2-preprocessing). The app should get the input video stream (for instance webcam), preprocess input frames, feed them into the model, and render the AU predictions in real-time. This stage especially utilizes achievements of previous stages.
 
 **Stage output**
 
@@ -89,14 +89,13 @@ Preparation of presentation materials and a video of the demo app, and other pot
 
 ### Stage 6. Report
 
-Preparation of report in LaTeX format. GitHub CI pipeline for building the PDF document is ready at the moment of writing this project plan. The report should be based on the Jupyter notebooks from stages 2–3.
+Preparation of report in LaTeX format. GitHub CI pipeline for building the PDF document is ready at the moment of writing this project plan. The report should be based on the Jupyter notebooks from stages [Stage 2](#stage-2-preprocessing), and [Stage 3](#stage-3-modeling).
 
 **Stage output**
 
 * PDF
 
 Everything else in the plan remains intact.
-
 
 ## Preliminary roles
 | Project member     |    Role    |   Main Task  |
