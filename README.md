@@ -115,7 +115,7 @@ Everything else in the plan remains intact.
 | Stage 2 |                      Data preprocessing                      |  |
 | Stage 3 |                 Model training and evaluation                |  |
 | Stage 4 |                     Demo app development                     |  |
-| Stage 5 |                   Presentation, short week                   |  |
+| Stage 5 |                         Presentation                         |  |
 | Stage 6 |                            Report                            |  |
 
 
