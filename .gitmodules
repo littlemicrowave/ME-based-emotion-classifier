@@ -1,0 +1,6 @@
+[submodule "med"]
+	path = med
+	url = https://github.com/tvaranka/meb.git
+[submodule "meb"]
+	path = meb
+	url = https://github.com/tvaranka/meb.git
