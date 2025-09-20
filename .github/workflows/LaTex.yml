@@ -5,8 +5,7 @@ on:
       - "./report/**"
 jobs:
   build_latex:
-    runs-on: alpine-latest
-
+    runs-on: ubuntu-latest
     steps:
       - name: Pull repo
         uses: actions/checkout@v4
