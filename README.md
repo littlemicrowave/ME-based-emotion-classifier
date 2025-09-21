@@ -120,12 +120,12 @@ Everything else in the plan remains intact.
 ## Preliminary roles
 | Project member     |    Role    |   Main Task  |
 |:------------------:|:----------:|:------------:|
-| Leo Davidov        |            |              |
-| Raffaele Sali      |            |              |
-| Sajjad Ghaeminejad |            |              |
-| Zhou Yang          |            |              |
-| Anatolii Fedorov   |            |              |
-| Timofei Polishchuk |            |              |
+| Leo Davidov        |   AI/Dev   | Preprocessing + Modeling |
+| Raffaele Sali      |   AI/Dev   | Preprocessing + Modeling |
+| Sajjad Ghaeminejad |    Dev     |   Demo App   |
+| Zhou Yang          |  Support   |   Reporting  |
+| Anatolii Fedorov   |   Dev      |   Demo App   |
+| Timofei Polishchuk |  Support   |   Reporting  |
 
 ## Project follow-up
 
