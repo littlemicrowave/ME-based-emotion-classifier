@@ -65,7 +65,7 @@ At this stage we should come up with a model architecture; potentially we should
 5. We might also try Attention instead of LSTM/GRU
 6. Since it is a classification task, loss is binary cross-entropy or categorical cross-entropy, last layer is softmax/sigmoid
 
-**Frameworks:** TensorFlow/PyTorch, scikit-learn, Matplotlib, NumPy, Pandas, MEB, and other tools
+**Frameworks:** TensorFlow/PyTorch, scikit-learn, seaborn, Matplotlib, NumPy, Pandas, MEB, and other tools
 
 Evaluation will be done according to F1 score, Precision, Recall, Accuracy, Confusion Matrix, and plotting of training and validation accuracy change throughout epochs.
 
