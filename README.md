@@ -35,7 +35,7 @@ At this stage we should be familiar with the dataset and its contents. Most focu
 
 **Things to consider:**
 
-1. Videos should be split into frames (we might need to consider this, despite the fact that dataset is already consisting of frames)
+1. Videos should be split into frames (we might need to consider this for app demo, despite the fact that dataset is already consisting of frames)
 2. Frames should be resized
 3. Face bounding box detection and extraction (we can use some pre-trained model)
 4. Color channels must be scaled and transformed into a single channel, for instance grayscale/chroma for efficiency
