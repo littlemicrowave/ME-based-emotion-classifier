@@ -35,7 +35,7 @@ At this stage we should be familiar with the dataset and its contents. Most focu
 
 **Things to consider:**
 
-1. Videos should be split into frames
+1. Videos should be split into frames (we might need to consider this, despite the fact that dataset is already consisting of frames)
 2. Frames should be resized
 3. Face bounding box detection and extraction (we can use some pre-trained model)
 4. Color channels must be scaled and transformed into a single channel, for instance grayscale/chroma for efficiency
@@ -54,7 +54,7 @@ At this stage we should be familiar with the dataset and its contents. Most focu
 
 ### Stage 3. Modeling
 
-At this stage we should come up with a model architecture; potentially we should build at least two models for AU recognition and compare their performance. We also need to consider the optimal number of input frames.
+At this stage we should come up with a model architecture; potentially we should build at least two models for AU recognition or emotion classification and compare their performance. We also need to consider the optimal number of input frames. We also might use some predifined model architectures.
 
 **Things to consider:**
 
