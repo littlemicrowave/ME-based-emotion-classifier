@@ -78,7 +78,7 @@ Evaluation will be done according to F1 score, Precision, Recall, Accuracy, Conf
 
 ### Stage 4. Demo app
 
-At this stage we take the winner architecture model and build an app which uses the preprocessing pipeline from [Stage 2](#stage-2-preprocessing). The app should get the input video stream (for instance webcam), preprocess input frames, feed them into the model, and render the AU predictions in real-time. This stage especially utilizes achievements of previous stages.
+At this stage we take the winner architecture model and build an app which uses the preprocessing pipeline from [Stage 2](#stage-2-preprocessing). The app should get the input video stream (for instance webcam), preprocess input frames, feed them into the model, and render the AU/emotion predictions in real-time. This stage especially utilizes achievements of previous stages.
 
 **Stage output**
 
