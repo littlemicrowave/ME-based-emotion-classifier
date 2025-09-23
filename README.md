@@ -1,5 +1,4 @@
-# Project Plan
-## Team Emotion Engine
+# Project Plan (Team Emotion Engine)
 
 The **goal** of the project is to develop an AI model for recognition of facial micro-expressions and emotion classification. Facial micro-expression action units (AUs) are spontaneous, subtle, and rapid muscle movements, which can be used to show the true feelings that humans may hide.
 
