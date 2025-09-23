@@ -115,8 +115,6 @@ The report needs to contain these mandatory parts:
 
 * PDF
 
-Everything else in the plan remains intact.
-
 ## Preliminary roles
 | Project member     |    Role    |   Main Task  |
 |:------------------:|:----------:|:------------:|
