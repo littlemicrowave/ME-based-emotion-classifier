@@ -11,7 +11,7 @@ The project will be divided into 6 stages, and we will try to follow Agile metho
 | Stage 1 | Familiarization with toolset, dataset, and literature review |  1  | 22.09. - 28.09.2025 |
 | Stage 2 |                      Data preprocessing                      |  2  |  29.09. - 5.10.2025 |
 | Stage 3 |                 Model training and evaluation                |  3  |  6.10. - 12.10.2025 |
-| Stage 4 |                       Simple demo app                        |  4  | 13.10. - 19.10.2025 |
+| Stage 4 |                       Simple demo                            |  4  | 13.10. - 19.10.2025 |
 | Stage 5 |                   Presentation, short week                   |  5  | 20.10. - 24.10.2025 |
 | Stage 6 |                            Report                            |  6  | 25.10. - 31.10.2025 |
 
@@ -76,9 +76,9 @@ Evaluation will be done according to F1 score, Precision, Recall, Accuracy, Conf
 
 ---
 
-### Stage 4. Demo app
+### Stage 4. Demo
 
-At this stage we take the winner architecture model and build an app which uses the preprocessing pipeline from [Stage 2](#stage-2-preprocessing). The app should get the input video stream (for instance webcam), preprocess input frames, feed them into the model, and render the AU/emotion predictions in real-time. This stage especially utilizes achievements of previous stages.
+At this stage we take the winner architecture model and build an app which uses the preprocessing pipeline from [Stage 2](#stage-2-preprocessing). Demo should get the video file, preprocess input frames, feed them into the model, and render the AU/emotion predictions, potentially rendering the prediction data onto each frame and assemblying video back. This stage especially utilizes achievements of previous stages.
 
 **Stage output**
 
@@ -120,9 +120,9 @@ The report needs to contain these mandatory parts:
 |:------------------:|:----------:|:------------:|
 | Leo Davidov        |   AI Dev   | Preprocessing + Modeling |
 | Raffaele Sali      |   AI Dev   | Preprocessing + Modeling |
-| Sajjad Ghaeminejad |    Dev     |   Demo App   |
+| Sajjad Ghaeminejad |    Dev     |   Demo   |
 | Zhou Yang          |  Support   |   Reporting  |
-| Anatolii Fedorov   |    Dev     |   Demo App   |
+| Anatolii Fedorov   |    Dev     |   Demo  |
 | Timofei Polishchuk |  Support   |   Reporting  |
 | Yante Li           |     TA     |      TA      |
 
