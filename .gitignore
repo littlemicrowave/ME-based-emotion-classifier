@@ -1,2 +1,24 @@
-data/
-meb/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.ipynb_checkpoints
+*.mov
+*.mp4
+*.avi
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+# OS
+.DS_Store
+Thumbs.db
+test_*.jpg
+test_*.png
+face_samples.png
+*.log
