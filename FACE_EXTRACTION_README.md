@@ -121,3 +121,6 @@ python3 extract_faces_retinaface.py
 1. MEB Framework: https://github.com/tvaranka/meb
 2. MEB Tools: `tools/crop_and_align.py`
 3. RetinaFace: Deng, J., Guo, J., Ververas, E., Kotsia, I., & Zafeiriou, S. (2020). "Retinaface: Single-shot multi-level face localisation in the wild." CVPR 2020.
+
+## Author
+Face extraction implemented by Sajjad Ghaeminejad
