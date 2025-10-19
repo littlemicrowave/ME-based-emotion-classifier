@@ -1,6 +1,8 @@
 venv/
 env/
 ENV/
+data/
+meb/
 __pycache__/
 *.py[cod]
 *$py.class
