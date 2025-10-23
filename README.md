@@ -130,10 +130,10 @@ The report needs to contain these mandatory parts:
 
 |  Phase  |                          Description                         |  Stage Achievement  |
 | :-----: | :----------------------------------------------------------: | :-----------------: |
-| Stage 1 | Familiarization with toolset, dataset, and literature review |  |
-| Stage 2 |                      Data preprocessing                      |  |
-| Stage 3 |                 Model training and evaluation                |  |
-| Stage 4 |                        Simple demo app                       |  |
+| Stage 1 | Familiarization with toolset, dataset, and literature review | + |
+| Stage 2 |                      Data preprocessing                      | + |
+| Stage 3 |                 Model training and evaluation                | + |
+| Stage 4 |                        Simple demo app                       | + |
 | Stage 5 |                         Presentation                         |  |
 | Stage 6 |                            Report                            |  |
 
