@@ -24,3 +24,21 @@ test_*.jpg
 test_*.png
 face_samples.png
 *.log
+
+# Stage 4 Demo outputs (don't commit these)
+*predictions*.csv
+*decoded*.csv
+*_demo.mp4
+*_clips/
+emotion_clips/
+smile_clips/
+my_results_clips*/
+
+# Backup files
+*.backup
+
+# Test/temporary scripts
+create_clips_fixed.py
+smooth_predictions.py
+extract_smile_clips.py
+run_my_video.sh
