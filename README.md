@@ -135,7 +135,7 @@ The report needs to contain these mandatory parts:
 | Stage 3 |                 Model training and evaluation                | + |
 | Stage 4 |                        Simple demo app                       | + |
 | Stage 5 |                         Presentation                         | + |
-| Stage 6 |                            Report                            |  |
+| Stage 6 |                            Report                            | + |
 
 
 

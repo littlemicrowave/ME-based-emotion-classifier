@@ -186,18 +186,17 @@ It was noticed that a single time distributed 2D frame encoder block alone with 
 
 \begin{figure}[H]
   \begin{center}
-    \includegraphics*[scale=0.8]{Figures/Picture2.png}
+    \includegraphics*[height=0.5\textwidth]{Figures/Picture2.png}
   \end{center}
   \caption{3DCONV + TD2DCNN encoder + biLSTM}
   \label{fig:fig2}
 \end{figure}
 
-
 The 3DCNN consisted of 1.2 million parameters and inherited the ResNet style with residual connections, but the better performance was achieved when residual blocks incorporated layer skipping connections with full 3x3x3 kernels, it presumably smoothens out the noise on the main path and acts as additional downstream feature extractor. The backbone of our 3DCNN progressively compresses clips into a compact single vector representation. The network begins with two 3D convolutional layers (8 and 16 filters) that capture low-level motion and appearance cues, followed by a series of residual modules with kernels 3x3x3 and increasing filter sizes (32, 64, 128, 256) and strides of 2 for deeper spatiotemporal feature extraction, ending up with flatten layer which outputs 1024-dimensional vector which encodes a sequence of 8x224x224. Dropout and spatial dropout layers are added for regularization and to reduce overfitting. Incorporation of spatial dropouts in the initial phase of compression significantly increased the ability of model to generalize the emotions of unseen subjects, the difference between dropout and spatial dropout is that it completely drops entire feature channels within the convolutional tensors, instead of single values like it does the normal dropout. Compact model view presented below:
 
 \begin{figure}[H]
   \begin{center}
-    \includegraphics*[scale=0.8]{Figures/Picture3.png}
+    \includegraphics*[height=1.0\textwidth]{Figures/Picture3.png}
   \end{center}
   \caption{3D CNN}
   \label{fig:fig3}
@@ -207,7 +206,7 @@ The 3DCNN model for 3DFFT had 1.3 million parameters and followed pretty the sam
 
 \begin{figure}[H]
   \begin{center}
-    \includegraphics*[scale=0.8]{Figures/Picture4.png}
+    \includegraphics*[height=0.5\textwidth]{Figures/Picture4.png}
   \end{center}
   \caption{3DCNN for 3DFFT}
   \label{fig:fig4}
