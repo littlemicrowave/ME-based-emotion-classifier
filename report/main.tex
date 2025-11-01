@@ -65,7 +65,7 @@
   Sajjad Ghaeminejad \\
   % Affiliation \\
   %University of Oulu, Finland \\
-  \texttt{sajjad.ghaeminejad@student.oulu.fi} \\
+  \texttt{ sghaemin25@student.oulu.fi} \\
   \And
   Zhou Yang \\
   % Affiliation \\
@@ -455,7 +455,7 @@ The model achieved an overall accuracy of 0.63 and a weighted F1-score of 0.62, 
 
 \subsection{3DCNN with “Leave the group of subjects out” or subject-disjoint evaluation}
 
-When we finally concluded our best model and best features, which appeared to be magnification of raw frames with consequent temporal normalization, and temporal normalization and consequent optical flow and strains extraction, it was decided to go further with model tuning and evaluation, and put the 3DCNN in the most difficult training-evaluation setup and evaluate the model performance on the subjects which model has never seen accidentally during the training. The functionality of our sampler was described in the preprocessing section, that is, sampler picks 10 subjects in stratified manner which form 15\% of dataset, so that class balance in this testing sample remains the same.
+When we finally concluded our best model and best features, which appeared to be magnification of raw frames with consequent temporal normalization, and temporal normalization and consequent optical flow and strains extraction, it was decided to go further with model tuning and evaluation, and put the 3DCNN in the most difficult training-evaluation setup and evaluate the model performance on the subjects which model has never seen accidentally during the training. The functionality of our sampler was described in the preprocessing section, that is, sampler picks 10 subjects in stratified manner which form 15\% of dataset, so that class balance in this testing sample remains the same. In the experiments depicted below the batch size is equal to 4.
 
 \subsubsection{Magnification – Temporal Normalization}
 
