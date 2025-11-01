@@ -32,11 +32,14 @@
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
 \usepackage{xcolor}         % colors
-\usepackage{biblatex}       % citations
+%\usepackage{biblatex}       % citations
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[style=numeric,sorting=none]{biblatex}
 \addbibresource{citations.bib}
 
 
-\title{Report Template for Affective Computing 2024}
+\title{Emotion Engine – Micro-Expression Recognition with Deep Learning}
 
 
 % The \author macro works with any number of authors. There are two commands
@@ -49,31 +52,40 @@
 
 
 \author{%
-  Another Smart Student\thanks{add information about authors if needed } \\
-  Center for Machine Vision and Signal Analysis\\
-   University of Oulu, Finland\\
-  \texttt{xxx.xxx@oulu.fi} \\
+  Leo Davidov \\
+   %University of Oulu, Finland\\
+  \texttt{leo.davidov@student.oulu.fi} \\
   % examples of more authors
-  % \And
-  % Coauthor \\
+  \And
+  Raffaele Sali \\
   % Affiliation \\
-  % Address \\
-  % \texttt{email} \\
-  % \AND
-  % Coauthor \\
+  %University of Oulu, Finland \\
+  \texttt{raffaele.sali@student.oulu.fi} \\
+  \And
+  Sajjad Ghaeminejad \\
   % Affiliation \\
-  % Address \\
-  % \texttt{email} \\
-  % \And
-  % Coauthor \\
+  %University of Oulu, Finland \\
+  \texttt{sajjad.ghaeminejad@student.oulu.fi} \\
+  \And
+  Zhou Yang \\
   % Affiliation \\
-  % Address \\
-  % \texttt{email} \\
-  % \And
-  % Coauthor \\
+  %University of Oulu, Finland \\
+  \texttt{zhou.yang@oulu.fi} \\
+  \And
+  Anatolii Fedorov \\
   % Affiliation \\
-  % Address \\
-  % \texttt{email} \\
+  %University of Oulu, Finland \\
+  \texttt{anatolii.fedorov@student.oulu.fi} \\
+  \And
+  Timofei Polishchuk \\
+  % Affiliation \\
+  %University of Oulu, Finland \\
+    \texttt{timofei.polishcuk@student.oulu.fi} \\
+  \And
+  TA in charge: Yante Li  \\
+  The Center for Machine Vision and Signal Analysis \\
+  University of Oulu, Finland \\
+    \texttt{yante.li@oulu.fi} \\
 }
 
 
@@ -84,357 +96,476 @@
 
 
 \begin{abstract}
-  The abstract paragraph should be indented \nicefrac{1}{2}~inch (3~picas) on
-  both the left- and right-hand margins. Use 10~point type, with a vertical
-  spacing (leading) of 11~points.  The word \textbf{Abstract} must be centered,
-  bold, and in point size 12. Two line spaces precede the abstract. The abstract
-  must be limited to one paragraph.
+Facial micro-expressions are spontaneous, subtle, and rapid muscle movements, which can be used to discover the true feelings that humans may hide. The primary goal of the project is to investigate how different Deep Learning AI model architectures perform in micro-expression recognition considering different feature representations derived from the facial image sequences, and in parallel train the best performer and prepare the video processing and annotation pipeline. Project also considers recognition and classification of facial micro-expression action units (AUs) from the feature sequences as an auxiliary target for our models.
+
+Developing reliable AU and micro expression recognition models is very challenging because the signals are brief, low-amplitude, noisy, and amount of training data is very limited. We tried to tackle this problem by utilizing two high quality ME research datasets CASME II \cite{yan2014} and 4DME\cite{li2023} and applying state-of-art image and signal analysis methods incorporated into MEB \cite{varanka2022, meb2022} — Eulerian Motion Magnification, Gunnar Farnebäck’s optical flow, with consequent computation of optical strains using Sobel kernels, as well as Local Binary Patterns (LBPs), and block-wise 3D Fast Fourier Transform. Mainly three multitask deep architectures were trained and compared. 3DCNN operating singly on optical flow computed from temporally normalized facial image sequence representation appeared as the strongest performer, reaching up to 61\% in emotion-class accuracy on a subject-disjoint evaluation set, which is competitive with reported state-of-the-art accuracy results for the corpora of such size. The resulting models power an end-to-end pipeline that can annotate raw videos after RetinaFace-based face detection and alignment, demonstrating practical viability despite limited data. Code is publicly available in https://github.com/littlemicrowave/ME-based-emotion-classifier.
+
+Keywords: micro-expression recognition, Eulerian motion magnification, optical flow, multitask learning, action units
 \end{abstract}
 
 
-\section{Submission of Final Report}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction }
+Micro-expressions (MEs) are brief (often <200 ms), low-amplitude facial movements that can reveal true emotions, feelings, and even thoughts, despite attempts to mask them, since they are caused unintentionally by corresponding brain and nervous system activity impulses. Since these movements involve subtle, short-lived muscle activations, they are difficult to capture and annotate reliably. The Facial Action Coding System (FACS) can additionally provide an action-unit (AU) vocabulary that is commonly used to describe such events without commitment to emotion labels \cite{clark2020}. In this research field there are several spontaneous ME datasets available, most notable are — SMIC, CASME II, and SAMM, which have catalyzed progress but remain limited in size, subject diversity, and cross-dataset consistency, which complicates supervised learning and evaluation \cite{yan2014}.
 
-The template is based on a top-tier conference NeurIPS, please read the instructions below carefully and follow them as much as you can.
+In this project, our goal was to systematically compare deep learning architectures for sequence processing across multiple spatiotemporal feature families. We leveraged Eulerian Video Magnification (EVM) to amplify subtle facial dynamics while preserving spatial layout \cite{farneback2003}, to capture dynamic cues, we employed a Gunnar Farnebäck formulation when computing flow fields \cite{zhao2007}, and 3D Fast Fourier Transform (FFT), which not only analyzes rapid changes of ME in the frequency domain, but also leverages the spatial and continuous temporal information \cite{li2022}.
 
+Concretely, we gained access and used two datasets— CASME II \cite{yan2014} and smaller version of 4DME \cite{li2023}, created five sets of features per short face clip and combined same feature representations from both datasets into joint feature sets.
 
-\subsection{Style}
+In our experiments was tried:
 
+\begin{enumerate}
+\item First applying EVM on the raw frames, then temporally normalizing the resulting clips, and after extracting the Farnebäck’s optical flow and optical strains.
+\item EVM of raw frames, and consequent temporal normalization.
+\item Temporal normalization and consequent dense optical flow extraction using Farnebäck’s method and optical strain computation.
+\item  Early fusion of previously computed optical flow and optical strains with frame-wise LBPs computed from the temporally normalized motion magnified clips in case 2).
+\item Spatiotemporal frequency-amplitude spectrum computed using 3D Fast Fourier Transform on the temporally normalized motion magnified clips in case 2).
+\end{enumerate}
 
-Papers to be submitted need to be prepared according to the
-instructions presented here. Papers may only be up to {\bf nine} pages long,
-including figures. Additional pages \emph{containing only acknowledgments and
-references} are allowed. Papers that exceed the page limit will not be
-reviewed, or in any other way considered for presentation at the conference.
+Difference between set 1) and set 3) is inclusion of motion magnification before optical flow vectors extraction.
 
+We then designed several model architectures, mainly two model families: a 3D-CNNs and a 2D-CNN image encoder with bidirectional LSTM sequence processing model.
 
+\section{Related work }
+MER pipelines typically combine careful face normalization with motion-sensitive representations and subject-independent evaluation. Studies emphasize how dataset biases and protocol choices, for instance, leave-one-subject-out and cross-dataset markedly affect reported performance, motivating designs that are robust to class imbalance and domain shift. Research has coalesced around a few core resources—SMIC, CASME/CASME II, and SAMM—whose elicitation procedures and annotation taxonomies differ and thus induce distribution shift; newer corpora such as 4DME further stress generalization by offering additional subjects and recording conditions \cite{wang2021}.
 
-\subsection{Retrieval of style files}
+To increase the signal-to-noise ratio before feature learning, many systems amplify the subtlest facial motions with Eulerian Video Magnification and then estimate dense motion fields, TV-L1 optical flow, in particular, is a common choice in prior work because of its robustness to outliers and piecewise-constant motion \cite{li2013}, our pipeline instead adopts the Farnebäck’s formulation. Early ME recognition relied on hand-crafted spatiotemporal descriptors such as LBP-TOP and its variants, which remain competitive on small datasets but are capacity-limited compared to modern deep video models \cite{tran2015}. With larger-scale pretraining and 3D convolutional architectures (e.g., C3D, I3D, and 3D-ResNets), end-to-end spatiotemporal encoders have become a backbone for short facial clips, often outperforming shallow descriptors while preserving temporal locality. ME-specific deep approaches frequently inject motion explicitly—using optical-flow streams or apex-centric cues (e.g., OFF-ApexNet)—to steer the network toward genuine facial micromovements rather than contextual artifacts \cite{carreira2017}. Across these pipelines, accurate face localization and alignment are crucial; single-stage detectors such as RetinaFace are widely adopted to stabilize geometry, standardize, crop and scale facial region before temporal modeling.
 
+Overall, prior works suggest that (I) magnification and optical flow can enhance ME salience, (II) 3D CNNs are strong spatiotemporal encoders when data are scarce but structured, and (III) evaluation under subject- or dataset-disjoint splits is essential to gauge real-world generalization, yet few systems unify these ingredients while jointly predicting both emotions and AUs across multiple datasets. Those gaps directly shaped the design and validation strategy of our multitask approach.
+\section{Methods  }
+\subsection{Datasets and preprocessing}
+Our version of CASME II consisted of 256 clips recorded at 200 FPS, with events as short as 0.02 s and at most 0.75 s, with seven emotion labels – happiness, others, disgust, repression, surprise, fear and sadness, and 19 action unit categories. The best reported five-class accuracy especially only on CASME II hovers around 63.41\% \cite{yan2014}. 4DME adds 267 clips at 60 FPS, with duration from 0.13 s up to 2.3 s each, with five primary micro-expression categories same as in CASME II – happiness, others, disgust, repression, and surprise, along with doubles such as “surprise+negative” and 20 annotated action unit categories. Our versions of CASME II and 4DME datasets have already contained standardized, and aligned facial images, ready to work with. CASME II clips were in 3 channels RGB, while 4DME consisted of single channel, grayscale images.
 
-The style files for NeurIPS and other conference information are available on
-the World Wide Web at
-\begin{center}
-  \url{http://www.neurips.cc/}
-\end{center}
-The file \verb+neurips_2022.pdf+ contains these instructions and illustrates the
-various formatting requirements your NeurIPS paper must satisfy.
+MEB was used as a base for datasets manipulation and feature extraction, for instance, MEB was mainly targeted for loading the datasets, loading annotations, subject ids, resizing, and gray scaling the images in CASME II. MEB framework has also provided methods for temporal normalization. We have actively employed uniform temporal sampling as the method for temporal normalization to standardize the duration of clips to the uniform frame count, since duration of clips widely varied between episodes as well as between datasets. Uniform temporal sampling is the simplest way to align clips which are recorded in completely different frame rates and have completely different duration, deep learning models on the other hand learn the general spatiotemporal dynamics which are represented in uniform sequences. This method has some disadvantages – the loss of unique temporal dependency within episode, in other words we are fitting random time intervals into predefined number of frames.
 
+MEB framework also provided a reference for the py\_evm, which is an implementation variant of Eulerian Motion Magnification. Parameters which are used in py\_evm Eulerian Motion Magnification method – alpha 10, R1 0.47, R2 0.1, number of levels 6, lambda 16. We set R1 to 0.47 according to the Nyquist frequency (max 0.5), if, target FPS would be 30, then frequencies up to 14 Hz are considered, this is quite tricky, since higher the upper bound frequency the more noise is getting amplified:
 
-The only supported style file for NeurIPS 2022 is \verb+neurips_2022.sty+,
-rewritten for \LaTeXe{}.  \textbf{Previous style files for \LaTeX{} 2.09,
-  Microsoft Word, and RTF are no longer supported!}
+\begin{enumerate}
+    \item R1 – upper bound frequency cutoff, normalized
+    \item R2 – lower bound frequency cutoff, normalizied, thus, we amplify everything in between.
+    \item Alpha is amplification coefficient
+    \item Number of levels – number of Laplacian Pyramid levels, each level is the difference between two consecutive Gaussian Pyramids, after lower in upsampled.
+    \item Lambda controls how alpha will be applied to each level, higher the lambda for more it will amplify higher levels of Laplacian pyramids, thus focus on more subtle actions.
+\end{enumerate}
 
+For optical flow computation, we modified the approach presented in MEB to improve computational efficiency. Specifically, instead of using the original “classic+nl-fast” optical flow variant implemented through the MATLAB engine which caused significant performance overhead, we adopted OpenCV’s implementation of Gunnar Farnebäck’s optical flow. This modification allowed for a more efficient, fully Python-based pipeline. Explanation of parameters in OpenCV Farneback method (0.5, 4, 15, 4, 5, 1.2), considering the order:
 
-The \LaTeX{} style file contains three optional arguments: \verb+final+, which
-creates a camera-ready copy, \verb+preprint+, which creates a preprint for
-submission to, e.g., arXiv, and \verb+nonatbib+, which will not load the
-\verb+natbib+ package for you in case of package clash.
+\begin{enumerate}
+    \item Pyramid Scale – image scale (<1) between pyramid levels (usually 0.3–0.8), smaller scale (0.3), more global motion, smoother flow, the larger, more detail, possibly more noise.
+    \item Levels – number of pyramid levels, more levels (5–6) the better handling of large motion, smoother overall flow.
+    \item Window size – averaging window size, the larger window, more smoothing, less noise, but less detail and slower response to motion.
+    \item Iterations – iterations at each pyramid level, the more iterations, more stable convergence, slightly smoother results (usually 3–5).
+    \item Poly\_n – size of the pixel neighborhood used for polynomial expansion (usually 5 or 7), the larger, smoother, denoised motion field, if smaller, more detailed but noisier.
+    \item Poly\_sigma – standard deviation of Gaussian used for polynomial smoothing, higher (1.5), more smoothing, denoising, the lower (1.1), more detail, more noise.
+\end{enumerate}
 
+The optical strain computation followed the method from MEB, which estimates local deformation in the optical flow field using Sobel kernels. The strain magnitude is derived from the spatial gradients of the horizontal “u” and vertical “v” flow components.
 
-\paragraph{Preprint option}
-If you wish to post a preprint of your work online, e.g., on arXiv, using the
-NeurIPS style, please use the \verb+preprint+ option. This will create a
-nonanonymized version of your work with the text ``Preprint. Work in progress.''
-in the footer. This version may be distributed as you see fit. Please \textbf{do
-  not} use the \verb+final+ option, which should \textbf{only} be used for
-papers accepted to NeurIPS.
+The block-wise 3D Fast Fourier Transform computation was implemented using functions provided by the NumPy library, with an additional optimized variant developed using TensorFlow tensors for improved computational efficiency. The 3D FFT is computed on spatiotemporal blocks of size 8x8x8 in a straightforward manner. First, a 1D FFT is performed along the temporal axis for each pixel’s intensity sequence, resulting in a matrix of shape (F, H, W), where each element represents the two-sided amplitude spectrum of temporal intensity oscillations at that pixel. Next, to analyze how these frequency amplitudes vary across the horizontal dimension, an additional FFT is computed along the width axis while keeping the vertical position fixed. This step produces a 2D FFT, capturing frequency decomposition of pixel intensities across time and width. Finally, to examine how these row-wise frequency amplitudes vary across the vertical dimension, another FFT is applied along the height axis, yielding the final 3D amplitude spectrum of size (8x8x8). This tensor represents spatial–temporal oscillations of pixel intensities across both space and time within the block. The computation is performed block-wise to preserve local motion characteristics from distinct facial regions. Each image (224x224) is divided into 28x28 non-overlapping blocks, and the 3D FFT is applied to each block independently. The resulting block-specific spectra are then concatenated to form a composite feature representation, providing fine-grained, region-specific spatiotemporal representation of subtle facial motion. Example is presented in a figure below.
 
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics*[width=0.9\textwidth]{Figures/Picture1.png}
+  \end{center}
+  \caption{3D FFT decomposition of clip}
+  \label{fig:fft}
+\end{figure}
 
-At submission time, please omit the \verb+final+ and \verb+preprint+
-options. This will anonymize your submission and add line numbers to aid
-review. Please do \emph{not} refer to these line numbers in your paper as they
-will be removed during generation of camera-ready copies.
+For the sort of fair model tuning and evaluation was developed a separate sampler function which provides following functionality – it can build classical random train test splitting of the data in a stratified manner, or it can sample specified number of subjects from the dataset for testing, as well in stratified manner, based on L1 distance, in other words script tries to pick N subjects from the dataset so that emotion class balance in the testing set remains as close as possible to the original dataset. Additionally, sampler can consider percent of data which testing subjects should cover, both datasets in total had only 63 subjects. Script was allowed to have a tolerance of picking +/-5\%, since sometimes it is impossible to build a good split considering stratification, N subjects, and percent size of testing sample.
 
+The deployment script then mirrors some of steps presented above. RetinaFace finds and aligns faces in raw videos, then those are resized to 224x224, and converted to grayscale, sliced into eight-frame windows, and Farnebäck’s optical flow is then computed, so the trained network sees the same representation it was optimized on.
 
-The file \verb+neurips_2022.tex+ may be used as a ``shell'' for writing your
-paper. All you have to do is replace the author, title, abstract, and text of
-the paper with your own.
+\subsection{Model architectures}
+To reach the state of models as they are a numerous amount of architectural tweaks, kernel size changes, stride changes, a variety of regularization techniques, class weightings, consequent retraining, evaluations and updates was applied, for instance, 3DCNN model was updated at least 500 times in order to get the desired result, at some point the focus was mainly put on 3DCNN architecture since it initially showed more promising results, so it provided a good starting point for the further updates.
 
+All models consider two heads, AU head and emotion head. For AU head was used binary focal cross\-entropy loss to address sparsity and imbalance of binary multilabel AU target vectors. For emotion classification we used weighted sparse categorical cross-entropy loss. Loss weights were computed based on the inverse frequency of class labels. For optimization was used Adam with a $1 \times 10^{-4}$ learning rate. Losses from both heads are combined with following weights 1 for emotions and 2 for action units.
 
-The formatting instructions contained in these style files are summarized in
-Sections \ref{gen_inst}, \ref{headings}, and \ref{others} below.
+Our 2DCNN + bidirectional LSTM is a hybrid model of 1.7 million parameters which under “evolution” received a block of multiple 3D convolutional layers for low-level spatiotemporal feature extraction, idea of 3D block is to capture short motion cues and spatial patterns before Time Distributed 2DCNN frame encoder. 2DCNN encoder which is implemented is ResNet style with residual connections for the proper gradient flows is used then for per-frame spatial feature extraction, representation and compression, with final layer of global max pooling which reduces each frame’s representation to its most salient features with a consecutive Bidirectional LSTM for temporal dependency modeling across frames.
 
+It was noticed that a single time distributed 2D frame encoder block alone with LSTM cannot achieve any proper results, presumably since it misses those motion dynamics which can be extracted by 3D convolution across time and space. Concise representation of the model is presented on the image below.
 
-\section{General formatting instructions}
-\label{gen_inst}
-
-
-The text must be confined within a rectangle 5.5~inches (33~picas) wide and
-9~inches (54~picas) long. The left margin is 1.5~inch (9~picas).  Use 10~point
-type with a vertical spacing (leading) of 11~points.  Times New Roman is the
-preferred typeface throughout, and will be selected for you by default.
-Paragraphs are separated by \nicefrac{1}{2}~line space (5.5 points), with no
-indentation.
-
-
-The paper title should be 17~point, initial caps/lower case, bold, centered
-between two horizontal rules. The top rule should be 4~points thick and the
-bottom rule should be 1~point thick. Allow \nicefrac{1}{4}~inch space above and
-below the title to rules. All pages should start at 1~inch (6~picas) from the
-top of the page.
-
-
-For the final version, authors' names are set in boldface, and each name is
-centered above the corresponding address. The lead author's name is to be listed
-first (left-most), and the co-authors' names (if different address) are set to
-follow. If there is only one co-author, list both author and co-author side by
-side.
-
-
-Please pay special attention to the instructions in Section \ref{others}
-regarding figures, tables, acknowledgments, and references.
-
-
-\section{Headings: first level}
-\label{headings}
-
-
-All headings should be lower case (except for first word and proper nouns),
-flush left, and bold.
-
-
-First-level headings should be in 12-point type.
-
-
-\subsection{Headings: second level}
-
-
-Second-level headings should be in 10-point type.
-
-
-\subsubsection{Headings: third level}
-
-
-Third-level headings should be in 10-point type.
-
-
-\paragraph{Paragraphs}
-
-
-There is also a \verb+\paragraph+ command available, which sets the heading in
-bold, flush left, and inline with the text, with the heading followed by 1\,em
-of space.
-
-
-\section{Citations, figures, tables, references}
-\label{others}
-
-
-These instructions apply to everyone.
-
-
-\subsection{Citations within the text}
-
-
-Citations may be author/year or numeric, as long as you maintain internal consistency.  As to the
-format of the references themselves, any style is acceptable as long as it is used consistently. To cite an article the \verb|\cite{'reference'}| can be used. See the source file, for example \cite{hasselmo1995dynamics}.
-
-
-As submission is double blind, refer to your own published work in the third
-person. That is, use ``In the previous work of Jones et al.\ [4],'' not ``In our
-previous work [4].'' If you cite your other papers that are not widely available
-(e.g., a journal paper under review), use anonymous author names in the
-citation, e.g., an author of the form ``A.\ Anonymous.''
-
-
-\subsection{Footnotes}
-
-
-Footnotes should be used sparingly.  If you do require a footnote, indicate
-footnotes with a number\footnote{Sample of the first footnote.} in the
-text. Place the footnotes at the bottom of the page on which they appear.
-Precede the footnote with a horizontal rule of 2~inches (12~picas).
-
-
-Note that footnotes are properly typeset \emph{after} punctuation
-marks.\footnote{As in this example.}
-
-
-\subsection{Figures}
-
-
-\begin{figure}
-  \centering
-  \fbox{\rule[-.5cm]{0cm}{4cm} \rule[-.5cm]{4cm}{0cm}}
-  \caption{Sample figure caption.}
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics*[height=0.5\textwidth]{Figures/Picture2.png}
+  \end{center}
+  \caption{3DCONV + TD2DCNN encoder + biLSTM}
+  \label{fig:fig2}
 \end{figure}
 
 
-All artwork must be neat, clean, and legible. Lines should be dark enough for
-purposes of reproduction. The figure number and caption always appear after the
-figure. Place one line space before the figure caption and one line space after
-the figure. The figure caption should be lower case (except for first word and
-proper nouns); figures are numbered consecutively.
+The 3DCNN consisted of 1.2 million parameters and inherited the ResNet style with residual connections, but the better performance was achieved when residual blocks incorporated layer skipping connections with full 3x3x3 kernels, it presumably smoothens out the noise on the main path and acts as additional downstream feature extractor. The backbone of our 3DCNN progressively compresses clips into a compact single vector representation. The network begins with two 3D convolutional layers (8 and 16 filters) that capture low-level motion and appearance cues, followed by a series of residual modules with kernels 3x3x3 and increasing filter sizes (32, 64, 128, 256) and strides of 2 for deeper spatiotemporal feature extraction, ending up with flatten layer which outputs 1024-dimensional vector which encodes a sequence of 8x224x224. Dropout and spatial dropout layers are added for regularization and to reduce overfitting. Incorporation of spatial dropouts in the initial phase of compression significantly increased the ability of model to generalize the emotions of unseen subjects, the difference between dropout and spatial dropout is that it completely drops entire feature channels within the convolutional tensors, instead of single values like it does the normal dropout. Compact model view presented below:
 
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics*[height=0.5\textwidth]{Figures/Picture3.png}
+  \end{center}
+  \caption{3D CNN}
+  \label{fig:fig3}
+\end{figure}
 
-You may use color figures.  However, it is best for the figure captions and the
-paper body to be legible if the paper is printed in either black/white or in
-color.
+The 3DCNN model for 3DFFT had 1.3 million parameters and followed pretty the same structure as above but it incorporated more aggressive spatial compression and was begging with wide 3x8x8 kernel and stride 2x8x8 16 filter convolutions, since our 3DFFT was computed for blocks of size 8x8x8. After max pooling downsampling residual 3D blocks follow, with increasing filter sizes 64, 128, 256 and small temporal kernels, which enables moderate spatiotemporal compression speed and feature extraction, the output embedding of the 3DFFT spectrum is the same 1024-dimensional vector as in the model above. Below is the brief summary of 3DFFT encoder:
 
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics*[height=0.5\textwidth]{Figures/Picture4.png}
+  \end{center}
+  \caption{3DCNN for 3DFFT}
+  \label{fig:fig4}
+\end{figure}
 
-\subsection{Tables}
+In all of our models we mostly used strides for the downsampling instead of max or average pooling, this enables downsampling step to act as a separate feature extractor, we also incorporated batch normalizations mostly after each convolutional layer. During training, many additional strategies were utilized to avoid overfitting such as learning rate reduction on plateau, learning rate schedulers, and exponential learning rate reduction. It was noticed that when the model size is around 1.2 million it balances the ability to learn and avoid rapid overfitting we also tried both batched and non-batched inputs, with batched inputs learning was slightly more stable. Also were tested kernel regularizations L1 and L2, first tries to minimize sum of squared weights, and second one sum of modulus of weights, no improvements so far were noticed, models just stops learning completely despite minimal coefficients were set. We have also tried to use 112x112 images, it was assumed that it could reduce noise, but instead of improvement it did just the opposite, so 224x224 appeared to optimal image size. To sum up, we tried to do models as small as possible, and regularize them as much as possible.
 
+\section{Experiments}
 
-All tables must be centered, neat, clean and legible.  The table number and
-title always appear before the table.  See Table~\ref{sample-table}.
+As it was stated we have created five feature sets, first we evaluated the models performance on the classical random train test split, and then further picked the best performer for evaluation and tuning on the so called subject-disjoint “Leave the group of subjects out”, which consisted of 10 subjects who represented 15\% of dataset in stratified manner. AU head was used as an auxiliary head which should have helped models to learn and generalize micro-expression relevant representations from the feature sets. It is also important to state that we have modified double emotion labels into a single ones, for example, 'positive+repression' was mapped to 'repression', those double labels are present only in 4DME and quite rare, around 7 samples per dataset, so we used them in order to improve the class balance. Only one rare category was left “sadness”, since there was not good mapping for it present, “fear” was moved to “others” since only 2 such samples were present in the whole data.
 
+\subsection{Sampling - Magnification - Optical Flow random split}
+\subsubsection{3DCNN}
 
-Place one line space before the table title, one line space after the
-table title, and one line space after the table. The table title must
-be lower case (except for first word and proper nouns); tables are
-numbered consecutively.
-
-
-Note that publication-quality tables \emph{do not contain vertical rules.} We
-strongly suggest the use of the \verb+booktabs+ package, which allows for
-typesetting high-quality, professional tables:
-\begin{center}
-  \url{https://www.ctan.org/pkg/booktabs}
-\end{center}
-This package was used to typeset Table~\ref{sample-table}.
-
-
-\begin{table}
-  \caption{Sample table title}
-  \label{sample-table}
-  \centering
-  \begin{tabular}{lll}
-    \toprule
-    \multicolumn{2}{c}{Part}                   \\
-    \cmidrule(r){1-2}
-    Name     & Description     & Size ($\mu$m) \\
-    \midrule
-    Dendrite & Input terminal  & $\sim$100     \\
-    Axon     & Output terminal & $\sim$10      \\
-    Soma     & Cell body       & up to $10^6$  \\
-    \bottomrule
-  \end{tabular}
+\begin{table}[H]
+\centering
+\caption{3DCNN results}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Metric} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} & \textbf{Support} \\
+\hline
+Accuracy       & --   & --   & 0.47 & 105 \\
+Macro avg      & 0.38 & 0.38 & 0.38 & 105 \\
+Weighted avg   & 0.49 & 0.47 & 0.47 & 105 \\
+\hline
+\end{tabular}%
+\label{tab:table1}
 \end{table}
 
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics*[width=0.7\textwidth]{Figures/Picture5.png}
+  \end{center}
+  \caption{3DCNN training graph}
+  \label{fig:fig5}
+\end{figure}
 
-\section{Final instructions}
+\subsubsection{3DCONV + 2DCONV + biLSTM}
+
+\begin{table}[H]
+\centering
+\caption{3DCONV + 2DCONV + biLSTM results}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Metric} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} & \textbf{Support} \\
+\hline
+Accuracy       & --   & --   & 0.59 & 105 \\
+Macro avg      & 0.53 & 0.51 & 0.51 & 105 \\
+Weighted avg   & 0.59 & 0.59 & 0.58 & 105 \\
+\hline
+\end{tabular}%
+\label{tab:table2}
+\end{table}
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics*[width=0.7\textwidth]{Figures/Picture6.png}
+  \end{center}
+  \caption{3DCONV + 2DCONV + biLSTM training graph}
+  \label{fig:fig6}
+\end{figure}
+
+\subsection{Temporal Normalization - Optical Flow random split}
+\subsubsection{3DCNN}
+
+\begin{table}[H]
+\centering
+\caption{3DCNN results}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Metric} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} & \textbf{Support} \\
+\hline
+Accuracy       & --   & --   & 0.66 & 105 \\
+Macro avg      & 0.68 & 0.66 & 0.63 & 105 \\
+Weighted avg   & 0.69 & 0.66 & 0.65 & 105 \\
+\hline
+\end{tabular}%
+\label{tab:table3}
+\end{table}
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics*[width=0.7\textwidth]{Figures/Picture7.png}
+  \end{center}
+  \caption{3DCNN training graph}
+  \label{fig:fig7}
+\end{figure}
+
+\subsubsection{3DCONV + 2DCONV + biLSTM}
+
+\begin{table}[H]
+\centering
+\caption{3DCONV + 2DCONV + biLSTM results}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Metric} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} & \textbf{Support} \\
+\hline
+Accuracy       & --   & --   & 0.61 & 105 \\
+Macro avg      & 0.53 & 0.50 & 0.50 & 105 \\
+Weighted avg   & 0.61 & 0.61 & 0.60 & 105 \\
+\hline
+\end{tabular}%
+\label{tab:table4}
+\end{table}
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics*[width=0.7\textwidth]{Figures/Picture8.png}
+  \end{center}
+  \caption{3DCONV + 2DCONV + biLSTM training graph}
+  \label{fig:fig8}
+\end{figure}
+
+\subsection{Magnification – Temporal normalization random split}
+\subsubsection{3DCNN}
+
+\begin{table}[H]
+\centering
+\caption{3DCNN results}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Metric} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} & \textbf{Support} \\
+\hline
+Accuracy       & --   & --   & 0.66 & 105 \\
+Macro avg      & 0.66 & 0.69 & 0.66 & 105 \\
+Weighted avg   & 0.68 & 0.66 & 0.65 & 105 \\
+\hline
+\end{tabular}%
+\label{tab:table5}
+\end{table}
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics*[width=0.7\textwidth]{Figures/Picture9.png}
+  \end{center}
+  \caption{3DCNN training graph}
+  \label{fig:fig9}
+\end{figure}
+
+\subsubsection{3DCONV + 2DCONV + biLSTM}
+
+\begin{table}[H]
+\centering
+\caption{3DCONV + 2DCONV + biLSTM results}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Metric} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} & \textbf{Support} \\
+\hline
+Accuracy       & --   & --   & 0.62 & 105 \\
+Macro avg      & 0.56 & 0.56 & 0.52 & 105 \\
+Weighted avg   & 0.61 & 0.62 & 0.59 & 105 \\
+\hline
+\end{tabular}%
+\label{tab:table6}
+\end{table}
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics*[width=0.7\textwidth]{Figures/Picture10.png}
+  \end{center}
+  \caption{3DCONV + 2DCONV + biLSTM training graph}
+  \label{fig:fig10}
+\end{figure}
+
+\subsection{Early fusion of Optical flow + LBP random split}
+LBPs were computed after magnification and sampling, Optical flow after directly after sampling.
+
+\subsubsection{3DCNN}
+\begin{table}[H]
+\centering
+\caption{3DCNN results}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Metric} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} & \textbf{Support} \\
+\hline
+Accuracy       & --   & --   & 0.58 & 105 \\
+Macro avg      & 0.58 & 0.55 & 0.52 & 105 \\
+Weighted avg   & 0.67 & 0.58 & 0.60 & 105 \\
+\hline
+\end{tabular}%
+\label{tab:table7}
+\end{table}
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics*[width=0.7\textwidth]{Figures/Picture11.png}
+  \end{center}
+  \caption{3DCNN training graph}
+  \label{fig:fig11}
+\end{figure}
+
+\subsubsection{3DCONV + 2DCONV + biLSTM}
+
+\begin{table}[H]
+\centering
+\caption{3DCONV + 2DCONV + biLSTM results}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Metric} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} & \textbf{Support} \\
+\hline
+Accuracy       & --   & --   & 0.54 & 105 \\
+Macro avg      & 0.48 & 0.44 & 0.44 & 105 \\
+Weighted avg   & 0.54 & 0.54 & 0.53 & 105 \\
+\hline
+\end{tabular}%
+\label{tab:table8}
+\end{table}
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics*[width=0.7\textwidth]{Figures/Picture12.png}
+  \end{center}
+  \caption{3DCONV + 2DCONV + biLSTM training graph}
+  \label{fig:fig12}
+\end{figure}
+
+Across all experiments of this branch, both architectures demonstrated pretty good ability to learn discriminative spatiotemporal representations from the feature sets, except set with optical flow which was computed from the motion magnified frames and variant of early fusion of LBPs with optical flow. It was noticed that first optical flow variant is very noisy since motion magnification magnifies a lot of “junk” with an upper bound cutoff 0.47. Bad results were also noticed in the early fusion of LBP with optical flow, that might have happened due to misaligned sequences, since framewise LBPs consisted of 8 frames and optical flow contained only 7, so LBPs were shifted in right by one frame. Nevertheless, the 3D CNN model, generally showed more stable and higher accuracy across most feature sets, achieving up to 0.66 accuracy and 0.68 weighted F1-score in the best-performing configuration. In comparison, the hybrid 3DCONV+ 2DCONV + BiLSTM model variant achieved competitive but slightly lower results, having a peak around 0.61 accuracy, depending on the feature representation. The 3D CNN’s advantage likely arises from its fully spatiotemporal nature, which enables more effective capture of subtle motion cues and localized intensity changes, which are typical for micro-expressions. Across all conditions, F1-scores remained quite moderate 0.47–0.68, showing the inherent difficulty of micro-expression recognition. The action unit (AU) auxiliary head likely helps the networks form representations aligned with underlying muscle activations, even though AU classification was not directly evaluated. It is also important to notice how zigzagged evaluation loss of training graphs look like, in this case all learning rate reduction and scheduling callbacks were disabled, it is also important to state, that it was discovered that training around 30 epochs is the most optimal. In the results above are represented training using non-batched input, which might be the reason of such sharp changes in loss, since with batch normalization layers are unstable when batch sizes less than 4, our experiments also consider batch size of 4, as well with different learning rate scheduling mechanisms, which was looking more stable, but required up to 50-60 epochs, the results can be reviewed separately in the GitHub repository, but they have remained about the same. Since 2DCONV + biLSTM was consistently underperforming at this stage we stopped tuning this model further.
+
+\subsection{Motion magnification - Temporal Normalization - 3D FFT}
+In this case we present the result with batch size 4, and learning rate reduction by 10 times after 30 epochs.
+
+\begin{table}[H]
+\centering
+\caption{Motion magnification - temporal normalization - 3D FFT results}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Metric} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} & \textbf{Support} \\
+\hline
+Accuracy       & --   & --   & 0.63 & 105 \\
+Macro avg      & 0.55 & 0.53 & 0.52 & 105 \\
+Weighted avg   & 0.63 & 0.63 & 0.62 & 105 \\
+\hline
+\end{tabular}%
+\label{tab:table9}
+\end{table}
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics*[width=0.7\textwidth]{Figures/Picture13.png}
+  \end{center}
+  \caption{Motion magnification - Temporal Normalization - 3D FFT training graph}
+  \label{fig:fig13}
+\end{figure}
+
+The model achieved an overall accuracy of 0.63 and a weighted F1-score of 0.62, which is consistent with previous high-performing feature sets such as Magnification - Temporal Normalization, and Temporal Normalization – Optical Flow. Noticeable that the training graph in this case looks much more stable due to bigger batch size and learning rate reduction policy, it was also discovered that models effectively learn until 80\% of training accuracy, then happens sharp spike in evaluation loss, so it was necessary to keep this and other models around this level in future experiments for the generalization performance especially on future subject-disjoint evaluation.
+
+\subsection{3DCNN with “Leave the group of subjects out” or subject-disjoint evaluation}
+
+When we finally concluded our best model and best features, which appeared to be magnification of raw frames with consequent temporal normalization, and temporal normalization and consequent optical flow and strains extraction, it was decided to go further with model tuning and evaluation, and put the 3DCNN in the most difficult training-evaluation setup and evaluate the model performance on the subjects which model has never seen accidentally during the training. The functionality of our sampler was described in the preprocessing section, that is, sampler picks 10 subjects in stratified manner which form 15\% of dataset, so that class balance in this testing sample remains the same.
+
+\subsubsection{Magnification – Temporal Normalization}
+
+\begin{table}[H]
+\centering
+\caption{Magnification – temporal normalization results}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Metric} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} & \textbf{Support} \\
+\hline
+Accuracy       & --   & --   & 0.55 & 97 \\
+Macro avg      & 0.44 & 0.47 & 0.45 & 97 \\
+Weighted avg   & 0.54 & 0.55 & 0.54 & 97 \\
+\hline
+\end{tabular}%
+\label{tab:table10}
+\end{table}
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics*[width=0.7\textwidth]{Figures/Picture14.png}
+  \end{center}
+  \caption{Magnification – Temporal Normalization training graph}
+  \label{fig:fig14}
+\end{figure}
+
+Here in particular we have used exponential learning rate reduction after epoch 35, that is, learning rate was reduced twice every second epoch. This model also had slightly smaller spatial dropout (0.2) than the model for the next features.
+
+\subsubsection{Temporal Normalization – Optical Flow}
+
+\begin{table}[H]
+\centering
+\caption{Temporal normalization – optical flow results}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Metric} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} & \textbf{Support} \\
+\hline
+Accuracy       & --   & --   & 0.61 & 97 \\
+Macro avg      & 0.51 & 0.48 & 0.48 & 97 \\
+Weighted avg   & 0.62 & 0.61 & 0.59 & 97 \\
+\hline
+\end{tabular}
+\label{tab:table11}
+\end{table}
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics*[width=0.7\textwidth]{Figures/Picture15.png}
+  \end{center}
+  \caption{Temporal Normalization – Optical Flow training graph}
+  \label{fig:fig15}
+\end{figure}
+
+The same exponential learning rate reduction policy was applied in this experiment, leading to the result, which can be considered state-of-the-art performance in micro-expression recognition given the limited size of the training corpus of 463 clips in total. It is important to state that batch size 1 often resulted in higher variance and “zigzaggy” evaluation graphs and worse results, but model trained on optical flow anyway stayed in 55\% region, so we have switched to the setup presented above, as it was stated that batch normalization is very unstable when there is actually “no batch”.
+
+\section{Discussion }
+In the beginning of the modelling and datasets manipulation there were a lot of mistakes done, which were further fixed, along with model development, and evolution of training-evaluation setups. In our project we reviewed 5 feature sets derived from the original images, and systematically compared different architectures, training and evaluation setups, as well as tuned and updated architectures numerous amounts of time, to build the model which is able to generalize on a such a limited corpus. Our subject subject-disjoint evaluation on best features which are optical flow vectors with strains, and motion magnified clips show that the 3D CNN achieved good generalization capacity even under the most extreme evaluation case. While performance decreased compared to random-split training as was expected, the accuracy of 0.61 and weighted F1-score of 0.59 is extremely high result on unseen individuals which is competitive with state-of-the-art micro-expression recognition benchmarks. The balanced, properly regularized 3D CNN benefits from motion-based features, although motion magnified frames showed also good results in the final evaluation.
+
+Key things to mention is that data is extremely noisy, training results might fluctuate even if everything was kept as much deterministic as possible, it happens due to different gradient paths, different kernel initialization values and other hardcoded randomization aspects, which impact the results on unstable data.
+
+It was noticed that Dropouts and Spatial Dropouts especially, are the key for the reduction of models focus on noise, Spatial Dropouts improved results approximately by 5-7\%. It is also important to state that the best fitting to the training data which gives the best generalization results is around 80\%, then happens sharp increase in evaluation loss. The biggest challenge is extremely small datasets, and heavily unbalanced labelling, so we tried to push the models size to the almost extreme minimum, while keeping their feature extraction power. Strong regularization, controlled model capacity, and balanced architecture depth are crucial for achieving good performance under data scarcity. Future experiments can potentially explore late fusion of 3D FFT and optical-flow representations, since both modalities capture complementary spatiotemporal frequency and motion information, which can open horizons for the new competitive achievements, also it is important to mention, that expanding the dataset by applying advanced data augmentation techniques can even further boost the performance of our models, even considering a small corpus which we currently have.
+
+We have also developed an experimental transformer-based model but it remained untested due to time constraints, it can potentially give the results competitive to the 3DCNN when properly tuned.
+
+\section{Conclusion }
+The primary objectives of this project, which were stated as development of a robust deep learning architecture and evaluation of the impact of different feature families for facial micro-expression recognition were successfully achieved. Through tough systematic experimentation, the most representative and discriminative feature sets were identified, and a competitive 3D CNN-based recognizer was engineered, trained, and evaluated. The resulting model achieved 61\% emotion classification accuracy on the subject-disjoint CASME II + 4DME split, placing it within the state-of-the-art range for a ME corpus of this size, interclass imbalance, and noise.
+
+Apart from raw performance metrics and training graphs, the project has delivered a complete, end-to-end ME recognition pipeline, that is a clip preprocessing pipeline, exported feature banks, trained model weights, and a demo application capable of face detection and alignment via RetinaFace and real-time annotation of predicted emotions on raw video streams empowered by our models. This makes the system fully deployable and ready for the potential applications.
+
+The project has gone far beyond course goals in time and space, this work integrates data analysis, research, state-of-art signal processing techniques, intensive deep learning modeling, and software engineering. The outcomes highlight that, in micro-expression recognition under limited-data conditions, careful preprocessing, temporal normalization, and strong regularization are far more important than network depth and number of trainable parameters.
+
+\section{Contribution distribution }
+Leo Davidov – 200+ hours. Preprocessing, feature engineering, modelling and tuning, project planning, presentation review and preparation, report writing.
+
+Raffaele Sali – 50+ hours. Modelling and tuning, presentation review and preparation.
+
+Sajjad Ghaeminejad – 35-40 hours. Face extraction, demo application.
+
+Timofei Polishchuk – 15 hours. Writing the report. 
+
+Anatolii Fedorov – 10-15 hours. Writing the report, LaTeX editing.
+
+Zhou Yang – Hours not specified. Writing the report.
 
 
-Do not change any aspects of the formatting parameters in the style files.  In
-particular, do not modify the width or length of the rectangle the text should
-fit into, and do not change font sizes (except perhaps in the
-\textbf{References} section; see below). Please note that pages should be
-numbered.
-
-
-\section{Preparing PDF files}
-
-
-Please prepare submission files with paper size ``US Letter,'' and not, for
-example, ``A4.''
-
-
-Fonts were the main cause of problems in the past years. Your PDF file must only
-contain Type 1 or Embedded TrueType fonts. Here are a few instructions to
-achieve this.
-
-
-\begin{itemize}
-
-
-\item You should directly generate PDF files using \verb+pdflatex+.
-
-
-\item You can check which fonts a PDF files uses.  In Acrobat Reader, select the
-  menu Files$>$Document Properties$>$Fonts and select Show All Fonts. You can
-  also use the program \verb+pdffonts+ which comes with \verb+xpdf+ and is
-  available out-of-the-box on most Linux machines.
-
-
-\item The IEEE has recommendations for generating PDF files whose fonts are also
-  acceptable for NeurIPS. Please see
-  \url{http://www.emfield.org/icuwb2010/downloads/IEEE-PDF-SpecV32.pdf}
-
-
-\item \verb+xfig+ "patterned" shapes are implemented with bitmap fonts.  Use
-  "solid" shapes instead.
-
-
-\item The \verb+\bbold+ package almost always uses bitmap fonts.  You should use
-  the equivalent AMS Fonts:
-\begin{verbatim}
-   \usepackage{amsfonts}
-\end{verbatim}
-followed by, e.g., \verb+\mathbb{R}+, \verb+\mathbb{N}+, or \verb+\mathbb{C}+
-for $\mathbb{R}$, $\mathbb{N}$ or $\mathbb{C}$.  You can also use the following
-workaround for reals, natural and complex:
-\begin{verbatim}
-   \newcommand{\RR}{I\!\!R} %real numbers
-   \newcommand{\Nat}{I\!\!N} %natural numbers
-   \newcommand{\CC}{I\!\!\!\!C} %complex numbers
-\end{verbatim}
-Note that \verb+amsfonts+ is automatically loaded by the \verb+amssymb+ package.
-
-
-\end{itemize}
-
-
-If your file contains type 3 fonts or non embedded TrueType fonts, we will ask
-you to fix it.
 
 
 
 
-\subsection{Margins in \LaTeX{}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\begin{ack}
+%Use unnumbered first level headings for the acknowledgments. All %acknowledgments
+%go at the end of the paper before the list of references. Moreover, you are %required to declare
+%funding (financial activities supporting the submitted work) and competing %%More information about this disclosure can be found at: %\url{https://neurips.cc/Conferences/2022/PaperInformation/FundingDisclosure}.
 
 
-Most of the margin problems come from figures positioned by hand using
-\verb+\special+ or other commands. We suggest using the command
-\verb+\includegraphics+ from the \verb+graphicx+ package. Always specify the
-figure width as a multiple of the line width as in the example below:
-\begin{verbatim}
-   \usepackage[pdftex]{graphicx} ...
-   \includegraphics[width=0.8\linewidth]{myfile.pdf}
-\end{verbatim}
-See Section 4.4 in the graphics bundle documentation
-(\url{http://mirrors.ctan.org/macros/latex/required/graphics/grfguide.pdf})
+%Do {\bf not} include this section in the anonymized submission, only in the final paper. You can use the \texttt{ack} environment provided in the style file to autmoatically hide this section in the anonymized submission.
+%\end{ack}
 
 
-A number of width problems arise when \LaTeX{} cannot properly hyphenate a
-line. Please give LaTeX hyphenation hints using the \verb+\-+ command when
-necessary.
-
-
-\begin{ack}
-Use unnumbered first level headings for the acknowledgments. All acknowledgments
-go at the end of the paper before the list of references. Moreover, you are required to declare
-funding (financial activities supporting the submitted work) and competing interests (related financial activities outside the submitted work).
-More information about this disclosure can be found at: \url{https://neurips.cc/Conferences/2022/PaperInformation/FundingDisclosure}.
-
-
-Do {\bf not} include this section in the anonymized submission, only in the final paper. You can use the \texttt{ack} environment provided in the style file to autmoatically hide this section in the anonymized submission.
-\end{ack}
-
-
-\section*{References}
-
-
-References follow the acknowledgments. Use unnumbered first-level heading for
-the references. Any choice of citation style is acceptable as long as you are
-consistent. It is permissible to reduce the font size to \verb+small+ (9 point)
-when listing the references.
-Note that the Reference section does not count towards the page limit.
-\medskip
 
 \printbibliography
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\appendix
-
-
-\section{Appendix}
-
-
-Optionally include extra information (complete proofs, additional experiments and plots) in the appendix.
-This section will often be part of the supplemental material.
 
 
 \end{document}
